@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "llm-wiki"
-version = "0.1.0"
+version = "0.2.0"
 description = "Git-backed LLM knowledge wiki with LangGraph pipelines and BM25 search"
 readme = "README.md"
 license = {text = "MIT"}

@@ -21,7 +21,7 @@ class Settings(BaseSettings):
 
     # LLM providers (LiteLLM model strings)
     ollama_host: str = "http://127.0.0.1:11434"
-    ollama_model: str = "ollama/qwen3:4b"
+    ollama_model: str = "ollama/qwen2.5:3b"
     groq_api_key: SecretStr = SecretStr("")
     groq_model: str = "groq/meta-llama/llama-4-scout-17b-16e-instruct"
     gemini_api_key: SecretStr = SecretStr("")

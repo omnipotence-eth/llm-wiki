@@ -75,7 +75,10 @@ async def complete_structured(  # noqa: UP047
 
     for model, name, kwargs in providers:
         try:
-            client = instructor.from_litellm(litellm.acompletion)
+            # Ollama: use JSON mode — tool calling fails with complex nested models
+            mode = instructor.Mode.JSON if name == "ollama" else instructor.Mode.TOOLS
+            client = instructor.from_litellm(litellm.acompletion, mode=mode)
+
             result = await client.chat.completions.create(
                 model=model,
                 messages=messages,

@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-wiki"
+version = "0.1.0"
+description = "Git-backed LLM knowledge wiki with LangGraph pipelines and BM25 search"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.13"
+authors = [{name = "Tremayne Timms"}]
+keywords = ["llm", "wiki", "knowledge-base", "langgraph", "obsidian"]
+
+dependencies = [
+    "litellm>=1.83.0,<2.0",
+    "instructor>=1.7.0,<2.0",
+    "langgraph>=0.4.0,<1.0",
+    "pydantic>=2.10.0,<3.0",
+    "pydantic-settings>=2.7.0,<3.0",
+    "click>=8.1.0,<9.0",
+    "python-frontmatter>=1.1.0,<2.0",
+    "rank-bm25>=0.2.2,<1.0",
+    "PyYAML>=6.0,<7.0",
+    "httpx>=0.28.0,<1.0",
+    "pymupdf>=1.25.0,<2.0",
+    "trafilatura>=2.0.0,<3.0",
+    "tiktoken>=0.9.0,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0,<10.0",
+    "pytest-cov>=5.0,<7.0",
+    "pytest-asyncio>=0.25.0,<1.0",
+    "ruff>=0.4.0,<1.0",
+    "hypothesis>=6.100.0,<7.0",
+    "pre-commit>=3.7.0,<5.0",
+]
+
+[project.scripts]
+wiki = "src.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+exclude = ["wiki", "sources", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+omit = ["src/cli.py"]
+
+[tool.coverage.report]
+fail_under = 70

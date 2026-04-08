@@ -1,0 +1,32 @@
+# Wiki content (gitignored in template — user's knowledge base)
+wiki/*.md
+
+# Source files (gitignored in template — user's documents)
+sources/*
+!sources/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.venv/
+
+# Personal guides (local only)
+EXPERIMENT_GUIDE.md
+PROJECT_GUIDE.md
+RESEARCH_LOG.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp

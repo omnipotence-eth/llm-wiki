@@ -1,0 +1,69 @@
+# =============================================================================
+# schema.yaml — Wiki behavior configuration (Karpathy's "third layer")
+# Controls how the LLM creates and maintains wiki pages.
+# =============================================================================
+
+wiki:
+  name: "My Knowledge Base"
+  description: "Personal wiki maintained by LLM"
+
+page_types:
+  concept:
+    description: "A core concept or technique"
+    min_words: 100
+    max_words: 500
+  entity:
+    description: "A person, organization, tool, or framework"
+    min_words: 50
+    max_words: 300
+  source_summary:
+    description: "Summary of a single source document"
+    min_words: 150
+    max_words: 600
+  synthesis:
+    description: "Cross-source synthesis connecting multiple concepts"
+    min_words: 200
+    max_words: 800
+
+tags:
+  # Controlled vocabulary — LLM should prefer these tags.
+  # Extend this list as your wiki grows.
+  allowed:
+    - deep-learning
+    - transformers
+    - attention
+    - fine-tuning
+    - inference
+    - rag
+    - reinforcement-learning
+    - nlp
+    - computer-vision
+    - optimization
+    - architecture
+    - training
+    - evaluation
+    - deployment
+
+prompts:
+  ingest_system: |
+    You are a knowledge engineer creating wiki pages from source material.
+    Create structured, interlinked pages using [[WikiLinks]] to reference
+    related concepts. Be precise and cite the source. Every claim should
+    be traceable to the source material.
+
+    Page types:
+    - concept: Explain a technique or idea (100-500 words)
+    - entity: Describe a person, org, or tool (50-300 words)
+    - source_summary: Summarize the source document (150-600 words)
+
+    Use the provided tag vocabulary when possible. Create new tags only
+    when no existing tag fits.
+
+  query_system: |
+    You are a research assistant. Answer questions using ONLY the wiki
+    pages provided as context. Cite pages by their exact title.
+    If the wiki doesn't contain enough information, say so explicitly
+    rather than guessing.
+
+    If your answer synthesizes information from multiple pages in a
+    novel way, set should_persist=true and provide a synthesis page.

@@ -45,6 +45,9 @@ wiki = "src.cli:main"
 where = ["."]
 include = ["src*"]
 
+[tool.uv]
+override-dependencies = ["requests>=2.31,<2.33"]
+
 [tool.ruff]
 target-version = "py313"
 line-length = 100

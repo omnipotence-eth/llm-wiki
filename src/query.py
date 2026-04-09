@@ -78,16 +78,10 @@ async def synthesize_node(state: QueryState) -> QueryState:
     settings = get_settings()
     question = state["question"]
 
+    from src.config import get_query_prompt
+
     messages = [
-        {
-            "role": "system",
-            "content": (
-                "You are a knowledge wiki assistant. Answer questions using the provided "
-                "wiki pages as context. Cite the wiki page titles you use. If your answer "
-                "synthesizes information across multiple pages in a novel way, set "
-                "should_persist=true and provide a synthesis_page."
-            ),
-        },
+        {"role": "system", "content": get_query_prompt()},
         {
             "role": "user",
             "content": f"Question: {question}\n\nWiki context:\n\n{context}",

@@ -51,6 +51,49 @@ def ingest(source: str, url: bool) -> None:
         click.echo(f"  wiki/{p}")
 
 
+@main.command(name="ingest-all")
+@click.option("--glob", "pattern", default="*", help="Glob pattern to match source files.")
+def ingest_all(pattern: str) -> None:
+    """Ingest all matching files from the sources directory."""
+
+    from src.config import get_settings
+    from src.ingest import run_ingest
+
+    settings = get_settings()
+    sources = sorted(settings.sources_dir.glob(pattern))
+    sources = [s for s in sources if s.is_file()]
+
+    if not sources:
+        click.secho(f"No files matching '{pattern}' in {settings.sources_dir}/", fg="yellow")
+        return
+
+    click.echo(f"Found {len(sources)} source(s) to ingest.")
+
+    total_pages = 0
+    total_errors = 0
+
+    for src_path in sources:
+        click.echo(f"\nIngesting: {src_path.name}")
+        result = asyncio.run(run_ingest(str(src_path)))
+        written = result.get("written_paths", [])
+        errors = result.get("errors", [])
+
+        if errors:
+            click.secho(f"  Errors: {len(errors)}", fg="red")
+            for err in errors:
+                click.echo(f"    - {err}")
+            total_errors += len(errors)
+        else:
+            click.secho(f"  Created {len(written)} pages", fg="green")
+            total_pages += len(written)
+
+    click.echo()
+    click.secho(
+        f"Done: {total_pages} pages created, {total_errors} errors",
+        fg="green" if not total_errors else "yellow",
+    )
+
+
 @main.command()
 @click.argument("question")
 def query(question: str) -> None:

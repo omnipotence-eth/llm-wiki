@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-04-08
+
+### Added
+- `wiki ingest-all` batch command with glob pattern support
+- Schema-driven prompts: ingest and query pipelines now load system prompts from `schema.yaml`
+- Tag vocabulary from `schema.yaml` passed to LLM during ingest for controlled tagging
+
+### Fixed
+- README Ollama model reference now matches config default (`qwen2.5:3b`, not `qwen3:4b`)
+
 ## [0.2.0] — 2026-04-08
 
 ### Added
@@ -33,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Wiki behavior schema (schema.yaml) — page types, tags, prompts
 - CI workflow (ruff + pytest), pre-commit hooks, dependabot
 
-[Unreleased]: https://github.com/omnipotence-eth/llm-wiki/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/omnipotence-eth/llm-wiki/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/omnipotence-eth/llm-wiki/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/omnipotence-eth/llm-wiki/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/omnipotence-eth/llm-wiki/releases/tag/v0.1.0

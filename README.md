@@ -122,7 +122,7 @@ Uses LiteLLM — works with any provider. Fallback chain: Groq → Gemini → Ol
 |----------|------|-------|
 | Groq | Free (14,400 req/day) | `WIKI_GROQ_API_KEY` |
 | Gemini | Free (1,500 req/day) | `WIKI_GEMINI_API_KEY` |
-| Ollama | Free (local) | `ollama run qwen3:4b` |
+| Ollama | Free (local) | `ollama run qwen2.5:3b` |
 
 ## License
 

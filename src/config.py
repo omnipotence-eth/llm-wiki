@@ -53,3 +53,57 @@ def get_settings() -> Settings:
     if _settings is None:
         _settings = Settings()
     return _settings
+
+
+_schema_cache: dict[str, object] | None = None
+
+
+def load_schema() -> dict[str, object]:
+    """Load and cache schema.yaml (prompts, tags, page types)."""
+    global _schema_cache  # noqa: PLW0603
+    if _schema_cache is not None:
+        return _schema_cache
+
+    import yaml  # noqa: PLC0415
+
+    settings = get_settings()
+    path = settings.schema_path
+    if not path.exists():
+        logger.warning("schema.yaml not found at %s, using defaults", path)
+        _schema_cache = {}
+        return _schema_cache
+
+    with open(path) as f:
+        _schema_cache = yaml.safe_load(f) or {}
+
+    logger.info("loaded schema path=%s", path)
+    return _schema_cache
+
+
+def get_ingest_prompt() -> str:
+    """Return the ingest system prompt from schema.yaml."""
+    schema = load_schema()
+    prompts = schema.get("prompts", {})
+    return prompts.get(
+        "ingest_system",
+        "You are a knowledge wiki curator. Given source text, extract key concepts "
+        "and entities into structured wiki pages.",
+    )
+
+
+def get_query_prompt() -> str:
+    """Return the query system prompt from schema.yaml."""
+    schema = load_schema()
+    prompts = schema.get("prompts", {})
+    return prompts.get(
+        "query_system",
+        "You are a knowledge wiki assistant. Answer questions using the provided "
+        "wiki pages as context.",
+    )
+
+
+def get_allowed_tags() -> list[str]:
+    """Return the controlled tag vocabulary from schema.yaml."""
+    schema = load_schema()
+    tags = schema.get("tags", {})
+    return tags.get("allowed", [])

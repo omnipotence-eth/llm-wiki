@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import src.config
 from src.config import Settings
 
 
@@ -43,7 +44,6 @@ def test_extra_env_ignored(monkeypatch):
 
 def test_settings_singleton():
     """get_settings returns cached instance."""
-    import src.config
     from src.config import get_settings
 
     src.config._settings = None  # reset singleton
@@ -51,3 +51,68 @@ def test_settings_singleton():
     s2 = get_settings()
     assert s1 is s2
     src.config._settings = None  # cleanup
+
+
+def test_load_schema_from_file(tmp_path, monkeypatch):
+    """load_schema reads prompts and tags from schema.yaml."""
+    from src.config import load_schema
+
+    schema_file = tmp_path / "schema.yaml"
+    schema_file.write_text(
+        "prompts:\n"
+        "  ingest_system: 'Custom ingest prompt'\n"
+        "  query_system: 'Custom query prompt'\n"
+        "tags:\n"
+        "  allowed:\n"
+        "    - ml\n"
+        "    - nlp\n"
+    )
+    src.config._schema_cache = None
+    src.config._settings = None
+    monkeypatch.setenv("WIKI_SCHEMA_PATH", str(schema_file))
+    result = load_schema()
+    assert result["prompts"]["ingest_system"] == "Custom ingest prompt"
+    assert result["tags"]["allowed"] == ["ml", "nlp"]
+    src.config._schema_cache = None
+    src.config._settings = None
+
+
+def test_load_schema_missing_file(tmp_path, monkeypatch):
+    """load_schema returns empty dict when file missing."""
+    from src.config import load_schema
+
+    src.config._schema_cache = None
+    src.config._settings = None
+    monkeypatch.setenv("WIKI_SCHEMA_PATH", str(tmp_path / "nonexistent.yaml"))
+    result = load_schema()
+    assert result == {}
+    src.config._schema_cache = None
+    src.config._settings = None
+
+
+def test_get_ingest_prompt_default(tmp_path, monkeypatch):
+    """get_ingest_prompt returns fallback when schema has no prompts."""
+    from src.config import get_ingest_prompt
+
+    src.config._schema_cache = None
+    src.config._settings = None
+    monkeypatch.setenv("WIKI_SCHEMA_PATH", str(tmp_path / "nonexistent.yaml"))
+    prompt = get_ingest_prompt()
+    assert "knowledge wiki curator" in prompt
+    src.config._schema_cache = None
+    src.config._settings = None
+
+
+def test_get_allowed_tags_from_schema(tmp_path, monkeypatch):
+    """get_allowed_tags returns tags from schema.yaml."""
+    from src.config import get_allowed_tags
+
+    schema_file = tmp_path / "schema.yaml"
+    schema_file.write_text("tags:\n  allowed:\n    - deep-learning\n    - rag\n")
+    src.config._schema_cache = None
+    src.config._settings = None
+    monkeypatch.setenv("WIKI_SCHEMA_PATH", str(schema_file))
+    tags = get_allowed_tags()
+    assert tags == ["deep-learning", "rag"]
+    src.config._schema_cache = None
+    src.config._settings = None

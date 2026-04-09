@@ -70,6 +70,8 @@ async def chunk_source_node(state: IngestState) -> IngestState:
 
 async def generate_pages_node(state: IngestState) -> IngestState:
     """Call LLM to generate wiki pages from chunked source text."""
+    from src.config import get_allowed_tags, get_ingest_prompt
+
     chunks = state.get("chunks", [])
     if not chunks:
         return {"errors": state.get("errors", []) + ["no chunks to process"]}
@@ -81,15 +83,16 @@ async def generate_pages_node(state: IngestState) -> IngestState:
     # Combine chunks for context (truncate if needed)
     combined = "\n\n---\n\n".join(chunks[:5])
 
+    # Load prompt from schema.yaml; append tag vocabulary if available
+    system_prompt = get_ingest_prompt()
+    allowed_tags = get_allowed_tags()
+    if allowed_tags:
+        system_prompt += "\n\nPreferred tags (use these when applicable): " + ", ".join(
+            allowed_tags
+        )
+
     messages = [
-        {
-            "role": "system",
-            "content": (
-                "You are a knowledge wiki curator. Given source text, extract key concepts "
-                "and entities into structured wiki pages. Create a source summary page, "
-                "3-10 concept pages, and 0-5 entity pages. Use clear, factual language."
-            ),
-        },
+        {"role": "system", "content": system_prompt},
         {
             "role": "user",
             "content": (

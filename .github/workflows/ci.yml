@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     name: Lint
@@ -17,12 +21,53 @@ jobs:
       - run: uv run ruff check src/ tests/
       - run: uv run ruff format --check src/ tests/
 
-  test:
-    name: Test
+  type-check:
+    name: Type Check
     needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v7
       - run: uv sync --extra dev
-      - run: uv run pytest tests/ -v --tb=short -x
+      - run: uv run mypy --ignore-missing-imports src/
+        continue-on-error: true
+
+  security:
+    name: Security
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --extra dev
+      - run: uv pip install pip-audit bandit
+      - name: Audit dependencies for CVEs
+        run: uv run pip-audit
+      - name: Static security analysis
+        run: uv run bandit -r src/ -ll --quiet
+
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    needs: [type-check, security]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --extra dev
+      - name: Run tests with coverage
+        run: >
+          uv run pytest tests/ -v --tb=short -x
+          --cov=src --cov-report=term-missing
+          --cov-fail-under=50
+          --junitxml=test-results.xml
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.python-version }}
+          path: test-results.xml

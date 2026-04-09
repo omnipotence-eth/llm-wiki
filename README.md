@@ -26,6 +26,10 @@ Based on [Karpathy's LLM Wiki pattern](https://gist.github.com/karpathy/442a6bf5
 2. **Wiki** — LLM-generated markdown pages (concepts, entities, syntheses)
 3. **Schema** — `schema.yaml` controls how the LLM creates pages
 
+## Why
+
+LLMs hallucinate. Notes apps don't understand context. This tool bridges the gap — a git-backed knowledge base where an LLM structures your information on ingest and retrieves it intelligently on query. Every page has a validated schema, BM25 search finds what you need, and multi-provider LLM routing (Groq → Gemini → Ollama) means it works whether you have API keys or just a local model. Inspired by Andrej Karpathy's LLM Wiki pattern, built for anyone who wants their personal knowledge base to actually *understand* what's in it.
+
 ## Architecture
 
 ```mermaid

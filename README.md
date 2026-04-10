@@ -5,9 +5,11 @@
 **Git-backed knowledge base maintained by LLM — Karpathy's LLM Wiki pattern**
 
 [![CI](https://github.com/omnipotence-eth/llm-wiki/actions/workflows/ci.yml/badge.svg)](https://github.com/omnipotence-eth/llm-wiki/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](https://python.org)
-[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-pipelines-purple?style=flat-square)](https://langchain-ai.github.io/langgraph/)
+[![Tests](https://img.shields.io/badge/tests-113_passing-brightgreen?style=flat-square)]()
+[![Ruff](https://img.shields.io/badge/code%20style-ruff-black?style=flat-square&logo=ruff)](https://docs.astral.sh/ruff/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
 [Quick Start](#quick-start) | [Architecture](#architecture) | [Commands](#commands) | [How It Works](#how-it-works)
 

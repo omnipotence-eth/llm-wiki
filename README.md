@@ -4,7 +4,7 @@
 
 **Git-backed knowledge base maintained by LLM — Karpathy's LLM Wiki pattern**
 
-[![CI](https://github.com/omnipotence-eth/llm-wiki/actions/workflows/ci.yml/badge.svg)](https://github.com/omnipotence-eth/llm-wiki/actions/workflows/ci.yml)
+[![CI](https://github.com/t-timms/llm-wiki/actions/workflows/ci.yml/badge.svg)](https://github.com/t-timms/llm-wiki/actions/workflows/ci.yml)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![LangGraph](https://img.shields.io/badge/LangGraph-pipelines-purple?style=flat-square)](https://langchain-ai.github.io/langgraph/)
 [![Tests](https://img.shields.io/badge/tests-113_passing-brightgreen?style=flat-square)]()

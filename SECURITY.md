@@ -2,7 +2,7 @@
 
 ## Reporting Vulnerabilities
 
-Report security vulnerabilities via [GitHub private advisory](https://github.com/omnipotence-eth/llm-wiki/security/advisories/new).
+Report security vulnerabilities via [GitHub private advisory](https://github.com/t-timms/llm-wiki/security/advisories/new).
 
 Do not open public issues for security vulnerabilities.
 
